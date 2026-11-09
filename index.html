@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<title>Film Crew Agent Farm - Glam Hustle Hub</title>
+<style>
+*{box-sizing:border-box}
+:root{--sapphire:#5b8def;--sapphire-light:#a9c8f8;--sapphire-pale:#e8f1fe;--chrome:#c0c6ce;--pearl:#fdfcfa;--ink:#22304a;--muted:#5a6b8a;--line:#d7e3f5;--good:#1e7a4c;--warn:#9a6a00}
+body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#e8f1fe 0%,#fdfcfa 45%,#dbe9fd 100%);color:var(--ink);font-size:17px;line-height:1.5}
+header{background:linear-gradient(120deg,#a9c8f8,#e8f1fe 55%,#f4f6f9);border-bottom:2px solid var(--chrome);padding:22px 16px 16px;text-align:center}
+header h1{margin:0;font-size:27px;line-height:1.2}
+header p{margin:8px auto 0;max-width:640px;color:var(--muted);font-size:16px}
+nav{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;background:rgba(253,252,250,.95);border-bottom:1px solid var(--line)}
+nav button{flex:1 1 30%;max-width:200px;min-height:52px;border:2px solid var(--sapphire-light);background:#fff;border-radius:14px;font-size:16px;font-weight:700;color:var(--ink);cursor:pointer;padding:8px 4px}
+nav button.active{background:linear-gradient(120deg,var(--sapphire),var(--sapphire-light));color:#fff;border-color:var(--sapphire)}
+.badge{display:inline-block;background:var(--sapphire);color:#fff;border-radius:999px;padding:0 8px;font-size:13px;margin-left:4px;vertical-align:middle}
+main{max-width:860px;margin:0 auto;padding:16px 14px 60px}
+.page{display:none}
+.page.active{display:block}
+.card{background:var(--pearl);border:1px solid var(--line);border-radius:18px;padding:18px;margin:0 0 16px;box-shadow:0 2px 10px rgba(91,141,239,.08)}
+.card h2{margin:0 0 10px;font-size:22px}
+.card h3{margin:14px 0 8px;font-size:19px}
+.mini{background:var(--sapphire-pale);border:1px solid var(--line);border-radius:14px;padding:12px;margin:0 0 10px}
+.mini h4{margin:0 0 6px;font-size:17px}
+.mini p,.card p{margin:0 0 10px}
+.notice{background:#fff7dd;border:2px solid #ecd27a;border-radius:14px;padding:14px;margin:0 0 16px;font-weight:600}
+label{display:block;font-weight:700;margin:16px 0 6px}
+label:first-of-type{margin-top:4px}
+input[type=text],input[type=url],select,textarea{width:100%;min-height:52px;border:2px solid var(--chrome);border-radius:12px;padding:12px;font-size:17px;background:#fff;color:var(--ink);font-family:inherit}
+textarea{min-height:96px;resize:vertical}
+input[type=file]{width:100%;font-size:16px;padding:10px 0}
+.radio-row{display:flex;gap:10px;flex-wrap:wrap}
+.radio-row label{flex:1 1 160px;margin:0;font-weight:700;border:2px solid var(--sapphire-light);border-radius:14px;padding:14px;background:#fff;cursor:pointer;text-align:center}
+.radio-row input{width:22px;height:22px;vertical-align:middle;margin-right:6px}
+.btn{display:block;width:100%;min-height:56px;border:none;border-radius:14px;background:linear-gradient(120deg,var(--sapphire),var(--sapphire-light));color:#fff;font-size:18px;font-weight:800;cursor:pointer;padding:12px;margin:14px 0 0}
+.btn.secondary{background:#fff;color:var(--ink);border:2px solid var(--sapphire)}
+.btn.small{min-height:48px;font-size:16px;margin:8px 0 0}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.btn-row .btn{flex:1 1 120px}
+.empty{border:2px dashed var(--chrome);border-radius:14px;padding:20px;text-align:center;color:var(--muted)}
+.slotbox{border:2px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;background:#fff}
+.slotframe{aspect-ratio:9/16;max-width:210px;margin:8px auto;background:var(--sapphire-pale);border:2px dashed var(--chrome);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;text-align:center;color:var(--muted);font-size:15px;padding:8px}
+.slotframe img{width:100%;height:100%;object-fit:cover}
+.locked{display:inline-block;background:#dff5e8;color:var(--good);border:1px solid #9fd8b6;border-radius:999px;padding:4px 12px;font-weight:800;font-size:15px}
+.notlocked{display:inline-block;background:#fff1cf;color:var(--warn);border:1px solid #ecd27a;border-radius:999px;padding:4px 12px;font-weight:800;font-size:15px}
+.status{display:inline-block;border-radius:999px;padding:4px 12px;font-weight:800;font-size:15px;background:var(--sapphire-pale);border:1px solid var(--line)}
+.status-btns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.status-btns button{flex:1 1 90px;min-height:48px;border-radius:12px;border:2px solid var(--sapphire-light);background:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.status-btns button.on{background:var(--sapphire);color:#fff}
+.prompt-out{white-space:pre-wrap;word-break:break-word;background:#0f2447;color:#eaf2ff;border-radius:14px;padding:14px;font-size:15px;line-height:1.55;margin:12px 0 0;min-height:80px}
+.msg{font-weight:700;color:var(--good);margin:10px 0 0}
+.err{font-weight:700;color:#b00020;margin:10px 0 0}
+.solo-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.solo-tabs button{flex:1 1 45%;min-height:52px;border-radius:12px;border:2px solid var(--sapphire-light);background:#fff;font-size:16px;font-weight:700;cursor:pointer;padding:8px}
+.solo-tabs button.active{background:linear-gradient(120deg,var(--sapphire),var(--sapphire-light));color:#fff}
+.solo-panel{display:none}
+.solo-panel.active{display:block}
+.kv{margin:0 0 6px}
+.kv b{display:inline-block;min-width:150px}
+a{color:var(--sapphire);word-break:break-all}
+footer{text-align:center;color:var(--muted);font-size:14px;padding:0 16px 30px}
+footer a{color:var(--sapphire);font-weight:700}
+@media(min-width:700px){header h1{font-size:34px}nav button{flex:0 1 auto}}
+</style>
+</head>
+<body>
+<header>
+<h1>🦋 Film Crew Agent Farm 🦋</h1>
+<p>Your whole video production crew in one control panel - scout, script, casting, storyboard, scenes, camera, voice, sound, edit, color, QC, and captions - for your podcasts, storybooks, shop videos, and commercials.</p>
+</header>
+<nav>
+<button data-page="home" class="active">Home</button>
+<button data-page="intake">Production Intake Form</button>
+<button data-page="vault">Character Vault <span class="badge" id="vaultBadge">0</span></button>
+<button data-page="solo">Solo Agent Forms</button>
+<button data-page="queue">Queue <span class="badge" id="queueBadge">0</span></button>
+<button data-page="run">Run in Chat</button>
+</nav>
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="page active" id="page-home">
+<div class="notice">Plain truth first: this dashboard is your control panel only - intake, vault, and queue. It does NOT browse, write scripts, generate images, make videos, edit, or post anything by itself. The crew does the work in chat, from the Run in Chat prompts. NOTHING is ever posted automatically, ever. Posting always needs your separate approval.</div>
+
+<div class="card">
+<h2>How this farm works</h2>
+<p>Fill out the Production Intake Form (or a solo agent form when you only need one crew member), and the job lands in your Queue. Open it, tap Run in Chat, copy the prompt, and paste it into chat. Your AI runs the crew WITH you in chat - in crew order, one stage at a time - and brings the finished video back in chat for your approval. There is no scheduled pickup.</p>
+<p>The Queue status buttons (queued / working / done) only change the label. They never execute anything. Execution happens in chat.</p>
+</div>
+
+<div class="card">
+<h2>The 12 agents - your crew, in order</h2>
+<div class="mini"><h4>1. Scout</h4><p>Finds the look before anything is made. Searches Pinterest (guest view, no sign-in) for the outfit, set, and mood for the chosen mode and topic, especially products with an Amazon link. For a shop video it anchors every scene with the listing's REAL product photo. Picks the look and copies its picture. Does not check price or availability at this step.</p></div>
+<div class="mini"><h4>2. Script Agent</h4><p>Writes the words - the hook, every spoken line, and on-screen text spelled exactly. Locks the script before any shot is planned: no invented lines are ever added later, in any voice. For a podcast or lesson, it writes from the real teaching points, in the hosts' own voices.</p></div>
+<div class="mini"><h4>3. Casting Agent</h4><p>Locks WHO is in the video from the Character Vault. Passes the Slot 1 headshot and Slot 2 body reference sheet as the actual reference images on every scene that shows that character - including characters who are only heard or named. Nobody is locked from a description alone, and nobody gets redesigned or recast mid-production.</p></div>
+<div class="mini"><h4>4. Storyboard Agent</h4><p>Turns the locked script into numbered shots - scene action, camera framing, and timing measured from the real audio or the real line lengths, never guessed. Writes scene ACTION only - never a description of the character. Labels every scene with the run's one Product Presentation choice. One speaker per shot: no two characters ever talk over each other.</p></div>
+<div class="mini"><h4>5. Image Agent</h4><p>Creates the person and scene stills in chat - character references, the outfit photo (your locked character wearing the exact Pinterest outfit), the outfit reference sheet, and each shot's approved starting still. All ultra realistic, real skin and hair texture, all PNG. Scene stills follow the run's aspect ratio; character references stay 9:16.</p></div>
+<div class="mini"><h4>6. Camera Agent</h4><p>Makes the moving shots in chat with your AI video tool, starting every shot from its approved still and, where the story allows, from the previous shot's last frame. Natural performance only: normal blinking, real gestures, nobody staring into the camera.</p></div>
+<div class="mini"><h4>7. Voice Agent</h4><p>Owns all spoken sound. Generated video audio is discarded unless it was explicitly intended AND verified line by line - the final always uses the approved voice or master audio. Only the current speaker appears to speak. If reliable lip-sync is not available, the video is honestly built as a narrated visual edit with captions.</p></div>
+<div class="mini"><h4>8. Sound Agent</h4><p>Gives every video real sound - an original or properly licensed music bed at the right level under the voices, plus soft ambient room tone where the scene needs it. Never silence, never a bare tone or pad pretending to be music. Shop videos use commercial-use compliant music only.</p></div>
+<div class="mini"><h4>9. Editor Agent</h4><p>Stitches the approved shots into the finished video in the run's aspect ratio - concat filter with a full re-encode, phone-safe yuv420p every time, never a stream copy across mixed sources. Compresses dead air: no pause longer than about a third of a second inside a scene. Adds captions built from the actual spoken audio, readable on a phone, never covering faces.</p></div>
+<div class="mini"><h4>10. Color Agent</h4><p>Applies ONE consistent grade across every shot - matched light, matched skin tones, the same look from the first frame to the last - with clean light dissolves where a hard cut jars.</p></div>
+<div class="mini"><h4>11. QC Director</h4><p>Runs the director-level audit before ANY video is handed to you: hands and limbs swept frame by frame (never more than 2 hands and 2 arms on a person), renders checked against the listing's real product photo, smooth flow, a full end-to-end listen word for word against the script with no overlapping voices or silent holes, and a phone-safe format check. Anything that fails gets fixed and re-checked. A video that fails never reaches you as finished.</p></div>
+<div class="mini"><h4>12. Caption and Posting Agent</h4><p>Writes the caption, on-screen hook, hashtags, and title for wherever the video is headed, and prepares the posting packet. No price, no sold counts, no discount or sale claim - ever. For a TikTok Shop video it also prepares the three switches: Disclose post content ON, Branded content checked, AI-generated label ON. It never posts anything.</p></div>
+</div>
+
+<div class="card">
+<h2>The 9 modes</h2>
+<p>A mode is a setting, not a separate farm. It changes the Scout search, the script shape, the shots, and the captions.</p>
+<p>1. Podcast episode<br>2. Talking lesson or tutorial<br>3. Kids storybook<br>4. Product demo or review<br>5. Commercial or promo<br>6. Testimonial<br>7. Get Ready With Me<br>8. Behind the scenes<br>9. Music or lyric video</p>
+</div>
+
+<div class="card">
+<h2>Production Type - one per run, None included</h2>
+<p>Every run also picks one Production Type: <b>None</b>, <b>Podcast episode</b>, <b>Talking lesson</b>, <b>Kids storybook episode</b>, <b>Shop video</b>, <b>Commercial or promo</b>, or <b>Short or reel</b>. The type tells the crew which of your standing rules apply - a Shop video gets the exact-product anchor and the disclosure switches; a Podcast episode gets the locked script and the real master audio; a Kids storybook gets one-speaker shots and the canon cast.</p>
+</div>
+
+<div class="card">
+<h2>Product Presentation - one choice per run</h2>
+<p>Every run picks ONE, right after Mode. The choices: <b>None</b> (the product is not presented - no presentation sentence goes in any prompt), <b>Wearing the product</b>, <b>Holding the product</b>, <b>Using the product</b>, <b>Showing it close to camera</b>, <b>Sitting beside her in frame</b>, <b>Unboxing / opening it</b>, <b>Holding it up by her face</b>, or <b>Holding in some scenes, wearing in others</b>.</p>
+<p>Each choice has its own sentence that ends every scene prompt. Wearing: <b>"Wearing the product, not holding it."</b> Holding: <b>"Holding the product, not wearing it."</b> Using: <b>"Using the product on camera, not just holding it."</b> None adds no sentence at all.</p>
+<p>Never show her wearing an outfit while holding that same outfit on a hanger in the same shot. Reject and regenerate any image that does. The mixed choice keeps them in separate scenes - holding first, wearing later - never the same shot.</p>
+</div>
+
+<div class="card">
+<h2>The crew workflow - every full production, in order</h2>
+<p>1. SCOUT finds the look on Pinterest in guest view (an Amazon-linked product when there is one) - or, for a shop video, the listing's real product photo. Copy the picture.</p>
+<p>2. SCRIPT locks the words. Nothing is shot from an unlocked script, and no line is ever invented after the lock.</p>
+<p>3. CASTING locks the character from the Vault: Slot 1 headshot + Slot 2 body sheet are the reference images on every scene that character appears in - heard or seen.</p>
+<p>4. STORYBOARD breaks the locked script into numbered shots: action only, one speaker per shot, timing measured from the real audio or line lengths, every scene labeled with the run's one Product Presentation choice.</p>
+<p>5. IMAGE makes and locks each shot's still in chat from the references. For an outfit: put the locked character in the exact outfit in chat first, check face and outfit match, then make the one single 9:16 outfit reference sheet as PNG.</p>
+<p>6. CAMERA animates the approved stills - Reference One is her headshot (Slot 1), Reference Two is the outfit reference sheet or the shot's approved scene still. NEVER leave Reference Two empty. No character bible is needed - the reference photos ARE the lock. Do not paste descriptions of her into scene prompts.</p>
+<p>7. VOICE replaces or confirms the audio: generated audio is discarded unless explicitly intended and verified line by line; the final carries the approved voices only, one at a time.</p>
+<p>8. SOUND lays the real music bed and ambient tone under everything, at an even level.</p>
+<p>9. EDITOR stitches with the concat filter and a full re-encode to phone-safe yuv420p, tightens pauses, and adds captions from the actual spoken audio.</p>
+<p>10. COLOR grades the whole video as one piece.</p>
+<p>11. QC DIRECTOR audits the finished video end to end. Failures go back to the agent who owns that step, get fixed, and get re-checked.</p>
+<p>12. CAPTION AND POSTING prepares the caption, title, hashtags, and - for a shop video - the disclosure switches, and returns the finished video IN CHAT for your approval. Never post, publish, or share it.</p>
+</div>
+
+<div class="card">
+<h2>The scene prompt shape</h2>
+<p>Every scene prompt uses this shape, and nothing else about her:</p>
+<p><b>"Use the reference images and keep the character perfectly consistent. [Scene action only.] [Spoken line, if any.] Wearing the product, not holding it."</b></p>
+<p>The last sentence swaps to match the run's Product Presentation choice. A None run adds no presentation sentence at all.</p>
+<p>NEVER describe her in a scene prompt - no face, hair, skin, body, or outfit description. Describing her overrides the references and creates a different person.</p>
+</div>
+
+<div class="card">
+<h2>The Director's Rules - standing, they bind every agent</h2>
+<p>- All generation stays in your included tools. No paid external provider, credit purchase, or API spend without your explicit approval of the exact cost.</p>
+<p>- Every image your AI creates is PNG, never webp. Your own uploaded Vault photos stay as you saved them (JPG or PNG).</p>
+<p>- Text-locked work stays locked: greeting words and any lettering in a still are copied untouched into every frame - never let a video model re-draw words.</p>
+<p>- Nothing is posted automatically, ever. Posting always needs your separate approval.</p>
+<p>- No price, discount, sold counts, or sale claim in any video or caption, ever. Captions end on the benefit plus tap the link.</p>
+<p>- TikTok Shop videos carry the disclosure set: Disclose post content ON, Branded content checked, AI-generated label ON.</p>
+<p>- Voice and copy everywhere: personable, human, plain words. No em dashes - use hyphens instead.</p>
+</div>
+</section>
+
+<!-- ============ INTAKE ============ -->
+<section class="page" id="page-intake">
+<div class="card">
+<h2>Production Intake Form</h2>
+<p>One production per submission. It lands in your Queue with everything the crew needs.</p>
+<label for="f_char">1. Locked character</label>
+<select id="f_char"></select>
+
+<label for="f_mode">2. Mode</label>
+<select id="f_mode" class="mode-sel"></select>
+
+<label>3. Product Presentation - pick ONE</label>
+<div class="radio-row" id="f_pp_row"></div>
+
+<label>4. Production Type - pick ONE</label>
+<div class="radio-row" id="f_ptype_row"></div>
+
+<label for="f_topic">5. Topic</label>
+<input type="text" id="f_topic" placeholder="What is this production about?">
+
+<label>6. Aspect ratio</label>
+<div class="radio-row" id="f_aspect_row"></div>
+
+<label for="f_length">7. Length</label>
+<input type="text" id="f_length" placeholder="For example: 27 seconds, or 4 minutes">
+
+<label for="f_script">8. Script or script link</label>
+<textarea id="f_script" placeholder="Paste the locked script, or the link to it. Leave empty and the Script Agent writes it - and locks it - first."></textarea>
+
+<label for="f_product_name">9. Product name (when there is one)</label>
+<input type="text" id="f_product_name" placeholder="Product name exactly as listed">
+
+<label for="f_product_link">Product link</label>
+<input type="url" id="f_product_link" placeholder="https://...">
+
+<label for="f_ref_video">10. Reference video link (when there is one)</label>
+<input type="url" id="f_ref_video" placeholder="https://...">
+
+<label for="f_notes">11. Notes</label>
+<textarea id="f_notes" placeholder="Anything the crew must know - deadlines, must-say lines, things to avoid"></textarea>
+
+<button class="btn" onclick="submitIntake()">Add This Production To My Queue</button>
+<p class="err" id="f_err"></p>
+<p class="msg" id="f_msg"></p>
+</div>
+</section>
+
+<!-- ============ VAULT ============ -->
+<section class="page" id="page-vault">
+<div class="card">
+<h2>Add a character</h2>
+<p>A character is NOT locked until BOTH slots are filled: Slot 1 headshot, and Slot 2 - ONE single 9:16 body reference sheet with front, three-quarter, left profile, and right side views of the same person, same outfit, same background, all on that one photo. Uploads are accepted as JPG or PNG, as you saved them.</p>
+<label for="v_name">Character name</label>
+<input type="text" id="v_name" placeholder="For example: Rosa">
+<label for="v_voice">Voice description</label>
+<input type="text" id="v_voice" placeholder="For example: warm, mid-30s, Southern lilt">
+<label>Slot 1 - Headshot (9:16)</label>
+<input type="file" id="v_slot1" accept="image/jpeg,image/png">
+<div class="slotframe" id="v_slot1_preview">No headshot yet</div>
+<label>Slot 2 - Body reference sheet (single 9:16 photo)</label>
+<input type="file" id="v_slot2" accept="image/jpeg,image/png">
+<div class="slotframe" id="v_slot2_preview">No body reference sheet yet</div>
+<button class="btn" onclick="addCharacter()">Save This Character</button>
+<p class="err" id="v_err"></p>
+<p class="msg" id="v_msg"></p>
+</div>
+<div id="vaultList"></div>
+</section>
+
+<!-- ============ SOLO ============ -->
+<section class="page" id="page-solo">
+<div class="card">
+<h2>Solo Agent Forms</h2>
+<p>Run one crew member by itself. Fill the form, copy the prompt into chat, or add the job to your Queue.</p>
+</div>
+<div class="solo-tabs" id="soloTabs"></div>
+<div id="soloPanels"></div>
+</section>
+
+<!-- ============ QUEUE ============ -->
+<section class="page" id="page-queue">
+<div id="queueList"></div>
+</section>
+
+<!-- ============ RUN ============ -->
+<section class="page" id="page-run">
+<div class="card">
+<h2>Run in Chat</h2>
+<p>Pick a job from your Queue and tap its Run in Chat button. Then copy the prompt below and paste it into chat - your crew runs that exact job, with those exact details, nothing swapped.</p>
+<div id="runCard"><div class="empty">No run picked yet.<br>Go to your Queue and tap Run in Chat on a job.</div></div>
+</div>
+</section>
+</main>
+<footer>
+<p>Film Crew Agent Farm - Glam Hustle Hub. This dashboard is a control panel: it does not execute work by itself, and nothing is ever posted automatically.</p>
+<p>✨ <a href="https://glamhustlehub.com/products/the-glam-vault">Join The Glam Vault</a> &nbsp;·&nbsp; 🛍️ <a href="https://glamhustlehub.com">Shop Glam Hustle Hub</a></p>
+</footer>
+
+<script>
+var MODES=['Podcast episode','Talking lesson or tutorial','Kids storybook','Product demo or review','Commercial or promo','Testimonial','Get Ready With Me','Behind the scenes','Music or lyric video'];
+var PTYPES=['None','Podcast episode','Talking lesson','Kids storybook episode','Shop video','Commercial or promo','Short or reel'];
+var ASPECTS=['16:9','9:16','1:1'];
+var PP=[['None','None - product not presented'],['Wearing','Wearing the product'],['Holding','Holding the product'],['Using','Using the product'],['CloseUp','Showing it close to camera'],['BesideHer','Sitting beside her in frame'],['Unboxing','Unboxing / opening it'],['ByFace','Holding it up by her face'],['MixedScenes','Holding in some scenes, wearing in others']];
+var AGENT_NAMES={1:'Scout',2:'Script Agent',3:'Casting Agent',4:'Storyboard Agent',5:'Image Agent',6:'Camera Agent',7:'Voice Agent',8:'Sound Agent',9:'Editor Agent',10:'Color Agent',11:'QC Director',12:'Caption and Posting Agent'};
+var AGENT_BLURBS={1:'Finds the look before anything is made - Pinterest in guest view, or the listing\u2019s real product photo for a shop video.',2:'Writes the words and LOCKS the script. No invented lines after the lock, in any voice.',3:'Locks who is in the video from the Character Vault, using the real reference photos on every scene.',4:'Turns the locked script into numbered shots. Action only, one speaker per shot, timing measured - never guessed.',5:'Creates the stills in chat: references, the outfit photo and sheet, and each shot\u2019s approved starting still. All PNG.',6:'Animates the approved stills into moving shots with the Consistent Character lock. Natural performance only.',7:'Owns all spoken sound. Generated audio is discarded unless explicitly intended and verified line by line.',8:'Real music bed and ambient tone on every video. Never silence, never a bare tone pretending to be music.',9:'Stitches the finished video: concat filter, full re-encode, phone-safe yuv420p, tight pauses, real captions.',10:'One consistent grade across every shot - matched light and skin tones, first frame to last.',11:'The director-level audit before any video is handed over. Hands, products, flow, audio, format. Fail = fix and re-check.',12:'Caption, hook, title, hashtags, and the posting packet - plus the TikTok Shop disclosure switches. Never posts.'};
+var SOLO_EXTRA={1:['Links you already like','Pinterest boards, product pages, or looks you already saved'],2:['Must-say lines or points to cover','Exact lines, teaching points, or offers that must be in the script'],3:['Also appearing (names)','Every other character in this video, exactly as named in the Vault'],4:['Must-have shots','Shots that have to be in the board, in order if it matters'],5:['Stills needed','List the stills: references, outfit photo, scene stills'],6:['Camera moves you want','Push-ins, pull-backs, pans - or keep it simple and say so'],7:['Voice notes','Whose voice, and the master audio link if there is one'],8:['Music direction','The feel you want - upbeat Christmas bells, soft piano, none under dialogue...'],9:['Caption notes','Caption style, words that must be exact, anything to keep off faces'],10:['Look to match','A link, a past video, or plain words: warm gold, cool sapphire...'],11:['What worries you about this cut','The scene, the hands, the audio spot - what to check hardest'],12:['Where it is headed','TikTok Shop, YouTube, Skool, Facebook - the destination decides the packet']};
+var SOLO_PP={4:true,5:true,6:true};
+var chars=[]; var queue=[]; var pendingSlot1=null; var pendingSlot2=null; var currentRunId=null; var currentSolo=1;
+try{ chars=JSON.parse(localStorage.getItem('filmcrewfarm_chars_v1')||'[]'); }catch(e){ chars=[]; }
+try{ queue=JSON.parse(localStorage.getItem('filmcrewfarm_queue_v1')||'[]'); }catch(e){ queue=[]; }
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function save(){ try{ localStorage.setItem('filmcrewfarm_chars_v1',JSON.stringify(chars)); localStorage.setItem('filmcrewfarm_queue_v1',JSON.stringify(queue)); }catch(e){ alert('This browser is out of space for saved photos. The item was kept for this visit but may not survive a reload.'); } }
+function ppSentence(pp){ if(pp==='Holding') return 'Holding the product, not wearing it.'; if(pp==='Wearing') return 'Wearing the product, not holding it.'; if(pp==='Using') return 'Using the product on camera, not just holding it.'; if(pp==='CloseUp') return 'Showing the product close to camera.'; if(pp==='BesideHer') return 'The product sits beside her in frame - she is not holding it or wearing it.'; if(pp==='Unboxing') return 'Unboxing the product on camera.'; if(pp==='ByFace') return 'Holding the product up beside her face.'; if(pp==='MixedScenes') return 'Holding the product in some scenes and wearing it in others - never both in the same shot.'; if(pp==='None') return 'No presentation line - scene prompts carry no wearing, holding, or using sentence for the product.'; return 'Not picked yet - pick ONE Product Presentation. None is a real choice.'; }
+function ppLabel(pp){ for(var i=0;i<PP.length;i++){ if(PP[i][0]===pp) return PP[i][1]; } return pp||'Not picked'; }
+function getChar(id){ for(var i=0;i<chars.length;i++){ if(chars[i].id===id) return chars[i]; } return null; }
+function charLabel(c){ return c ? ('Character '+c.letter+' - '+c.name) : 'No character picked'; }
+function isLocked(c){ return !!(c && c.slot1 && c.slot2); }
+function showPage(name){ var pages=document.querySelectorAll('.page'); for(var i=0;i<pages.length;i++) pages[i].classList.remove('active'); var p=$('page-'+name); if(p) p.classList.add('active'); var btns=document.querySelectorAll('nav button'); for(var j=0;j<btns.length;j++){ btns[j].classList.toggle('active', btns[j].getAttribute('data-page')===name); } window.scrollTo(0,0); }
+var navBtns=document.querySelectorAll('nav button'); for(var nb=0;nb<navBtns.length;nb++){ navBtns[nb].addEventListener('click',function(){ showPage(this.getAttribute('data-page')); }); }
+function radioHTML(name,options,values){ return options.map(function(o,i){ var v=values?values[i]:o; return '<label><input type="radio" name="'+name+'" value="'+esc(v)+'"> '+esc(o)+'</label>'; }).join(''); }
+function refreshPickers(){ var opts='<option value="">- No character picked -</option><option value="__new">Create a new character (add her in the Character Vault)</option>'; chars.forEach(function(c){ opts+='<option value="'+c.id+'">Character '+esc(c.letter)+' - '+esc(c.name)+(isLocked(c)?' (LOCKED)':' (not locked yet)')+'</option>'; }); $('f_char').innerHTML=opts; var picks=document.querySelectorAll('.char-picker'); for(var i=0;i<picks.length;i++){ var cur=picks[i].value; picks[i].innerHTML=opts; picks[i].value=cur; } var modes='<option value="">- Pick a mode -</option><option>None</option>'+MODES.map(function(m){ return '<option>'+m+'</option>'; }).join(''); var ms=document.querySelectorAll('.mode-sel'); for(var k=0;k<ms.length;k++){ var mv=ms[k].value; ms[k].innerHTML=modes; ms[k].value=mv; } $('vaultBadge').textContent=chars.length; $('queueBadge').textContent=queue.length; }
+function isJpgPng(file){ if(!file) return false; var n=(file.name||'').toLowerCase(); var t=file.type||''; if(t==='image/webp'||n.slice(-5)==='.webp') return false; return t==='image/jpeg'||t==='image/png'||n.slice(-4)==='.jpg'||n.slice(-5)==='.jpeg'||n.slice(-4)==='.png'; }
+function readSlot(file,cb,errEl){ if(!file){ cb(null); return; } if(!isJpgPng(file)){ if(errEl){ errEl.textContent='JPG or PNG please.'; } alert('JPG or PNG please.'); cb(undefined); return; } var r=new FileReader(); r.onload=function(){ cb({data:r.result,name:file.name}); }; r.readAsDataURL(file); }
+function shrinkIfHuge(dataUrl,cb){ try{ var img=new Image(); img.onload=function(){ var max=1080; if(img.width<=max&&img.height<=max){ cb(dataUrl); return; } var s=max/Math.max(img.width,img.height); var cv=document.createElement('canvas'); cv.width=Math.round(img.width*s); cv.height=Math.round(img.height*s); cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height); cb(cv.toDataURL('image/jpeg',0.85)); }; img.onerror=function(){ cb(dataUrl); }; img.src=dataUrl; }catch(e){ cb(dataUrl); } }
+function setPending(slot,file){ readSlot(file,function(res){ if(res===undefined){ return; } if(res){ shrinkIfHuge(res.data,function(d2){ res.data=d2; if(slot==='slot1'){ pendingSlot1=res; $('v_slot1_preview').innerHTML='<img src="'+res.data+'" alt="Headshot preview">'; } else { pendingSlot2=res; $('v_slot2_preview').innerHTML='<img src="'+res.data+'" alt="Body sheet preview">'; } }); } },$('v_err')); }
+$('v_slot1').addEventListener('change',function(){ setPending('slot1',this.files[0]); });
+$('v_slot2').addEventListener('change',function(){ setPending('slot2',this.files[0]); });
+function nextLetter(){ var used={}; chars.forEach(function(c){ used[c.letter]=true; }); var abc='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for(var i=0;i<abc.length;i++){ if(!used[abc[i]]) return abc[i]; } return 'X'+(chars.length+1); }
+function addCharacter(){ var name=$('v_name').value.trim(); var voice=$('v_voice').value.trim(); $('v_err').textContent=''; $('v_msg').textContent=''; if(!name){ $('v_err').textContent='Give the character a name first.'; return; } var c={id:'c'+Date.now(),letter:nextLetter(),name:name,voice:voice,slot1:pendingSlot1,slot2:pendingSlot2}; chars.push(c); save(); pendingSlot1=null; pendingSlot2=null; $('v_name').value=''; $('v_voice').value=''; $('v_slot1').value=''; $('v_slot2').value=''; $('v_slot1_preview').textContent='No headshot yet'; $('v_slot2_preview').textContent='No body reference sheet yet'; $('v_msg').textContent='Saved: Character '+c.letter+' - '+c.name+(isLocked(c)?' - LOCKED.':' - not locked yet. A character is NOT locked until BOTH slots are filled.'); renderVault(); refreshPickers(); }
+function replaceSlot(charId,slot,input){ var c=getChar(charId); if(!c) return; readSlot(input.files[0],function(res){ if(res===undefined){ input.value=''; renderVault(); return; } if(res){ shrinkIfHuge(res.data,function(d2){ res.data=d2; c[slot]=res; save(); renderVault(); refreshPickers(); if(currentRunId) renderRunCard(currentRunId); }); } },null); }
+function deleteCharacter(id){ if(!confirm('Delete this character from the Vault?')) return; chars=chars.filter(function(c){ return c.id!==id; }); save(); renderVault(); refreshPickers(); }
+function renderVault(){ var w=$('vaultList'); if(!chars.length){ w.innerHTML='<div class="card"><div class="empty">Your Character Vault is empty.<br>Add your first character above - headshot in Slot 1, single 9:16 body reference sheet in Slot 2.</div></div>'; return; } w.innerHTML=chars.map(function(c){ var lk=isLocked(c); return '<div class="card"><h3>Character '+esc(c.letter)+' - '+esc(c.name)+'</h3>'
++'<p class="kv"><b>Voice:</b> '+esc(c.voice||'No voice description yet')+'</p>'
++'<p>'+(lk?'<span class="locked">LOCKED</span>':'<span class="notlocked">NOT LOCKED - both slots must be filled</span>')+'</p>'
++'<div class="slotbox"><b>Slot 1 - Headshot</b><div class="slotframe">'+(c.slot1?'<img src="'+c.slot1.data+'" alt="Headshot">':'No headshot yet')+'</div><input type="file" accept="image/jpeg,image/png" onchange="replaceSlot(\''+c.id+'\',\'slot1\',this)"></div>'
++'<div class="slotbox"><b>Slot 2 - Body reference sheet (single 9:16 photo)</b><div class="slotframe">'+(c.slot2?'<img src="'+c.slot2.data+'" alt="Body reference sheet">':'No body reference sheet yet')+'</div><input type="file" accept="image/jpeg,image/png" onchange="replaceSlot(\''+c.id+'\',\'slot2\',this)"></div>'
++'<button class="btn secondary small" onclick="deleteCharacter(\''+c.id+'\')">Delete this character</button></div>'; }).join(''); }
+</script>
+
+<script>
+function checkedVal(name){ var r=document.querySelectorAll('input[name="'+name+'"]'); for(var i=0;i<r.length;i++){ if(r[i].checked) return r[i].value; } return ''; }
+$('f_pp_row').innerHTML=radioHTML('f_pp',PP.map(function(p){return p[1];}),PP.map(function(p){return p[0];}));
+$('f_ptype_row').innerHTML=radioHTML('f_ptype',PTYPES);
+$('f_aspect_row').innerHTML=radioHTML('f_aspect',['16:9 - YouTube and TV','9:16 - vertical','1:1 - square'],ASPECTS);
+function submitIntake(){ $('f_err').textContent=''; $('f_msg').textContent=''; var charId=$('f_char').value; if(charId==='__new') charId=''; var mode=$('f_mode').value; var pp=checkedVal('f_pp'); var ptype=checkedVal('f_ptype'); var aspect=checkedVal('f_aspect'); var topic=$('f_topic').value.trim(); if(!mode){ $('f_err').textContent='Pick a mode first.'; return; } if(!pp){ $('f_err').textContent='Pick ONE Product Presentation - None is a real choice when the product is not presented.'; return; } if(!ptype){ $('f_err').textContent='Pick ONE Production Type - None is a real choice.'; return; } if(!aspect){ $('f_err').textContent='Pick the aspect ratio for this production.'; return; } if(!topic){ $('f_err').textContent='Add a topic so your crew knows what this production is about.'; return; } var c=getChar(charId); var item={id:'r'+Date.now(),type:'Full Production Run',agentNum:0,charId:charId,voice:c?(c.voice||''):'',mode:mode,pp:pp,ptype:ptype,aspect:aspect,topic:topic,length:$('f_length').value.trim(),script:$('f_script').value.trim(),productName:$('f_product_name').value.trim(),productLink:$('f_product_link').value.trim(),refVideo:$('f_ref_video').value.trim(),notes:$('f_notes').value.trim(),extra:'',status:'queued',createdAt:Date.now()}; queue.unshift(item); save(); renderQueue(); refreshPickers(); $('f_msg').textContent='Added to your Queue. Tap Queue, then Run in Chat, when you are ready.'; $('f_topic').value=''; $('f_length').value=''; $('f_script').value=''; $('f_product_name').value=''; $('f_product_link').value=''; $('f_ref_video').value=''; $('f_notes').value=''; }
+function buildSoloUI(){ var tabs=''; var panels=''; for(var n=1;n<=12;n++){ tabs+='<button data-solo="'+n+'" class="'+(n===1?'active':'')+'">'+n+'. '+AGENT_NAMES[n]+'</button>'; panels+='<div class="solo-panel'+(n===1?' active':'')+'" id="solo-panel-'+n+'"><div class="card"><h3>'+n+'. '+AGENT_NAMES[n]+'</h3><p>'+AGENT_BLURBS[n]+'</p>'
++'<label>Locked character</label><select class="char-picker" id="s'+n+'_char"></select>'
++'<label>Mode</label><select class="mode-sel" id="s'+n+'_mode"></select>'
++(SOLO_PP[n]?'<label>Product Presentation - pick ONE</label><div class="radio-row">'+radioHTML('s'+n+'_pp',PP.map(function(p){return p[1];}),PP.map(function(p){return p[0];}))+'</div>':'')
++'<label>Production Type - pick ONE</label><div class="radio-row">'+radioHTML('s'+n+'_ptype',PTYPES)+'</div>'
++'<label>Aspect ratio</label><div class="radio-row">'+radioHTML('s'+n+'_aspect',['16:9 - YouTube and TV','9:16 - vertical','1:1 - square'],ASPECTS)+'</div>'
++'<label>Topic</label><input type="text" id="s'+n+'_topic" placeholder="What is this job about?">'
++'<label>Length</label><input type="text" id="s'+n+'_length" placeholder="For example: 27 seconds, or 4 minutes">'
++'<label>Script, lines, or brief</label><textarea id="s'+n+'_script" placeholder="Paste the locked script, the lines, or the brief for this job"></textarea>'
++'<label>Product name (when there is one)</label><input type="text" id="s'+n+'_product_name" placeholder="Product name exactly as listed">'
++'<label>Product link</label><input type="url" id="s'+n+'_product_link" placeholder="https://...">'
++'<label>Reference video link (when there is one)</label><input type="url" id="s'+n+'_ref_video" placeholder="https://...">'
++'<label>'+SOLO_EXTRA[n][0]+'</label><input type="text" id="s'+n+'_extra" placeholder="'+SOLO_EXTRA[n][1]+'">'
++'<label>Notes</label><textarea id="s'+n+'_notes" placeholder="Anything this agent must know"></textarea>'
++'<div class="btn-row"><button class="btn" onclick="updateSoloPrompt('+n+');copyText(buildSoloPrompt(soloData('+n+')),this)">Copy This Agent\u2019s Prompt</button><button class="btn secondary" onclick="queueSolo('+n+')">Add To Queue</button></div>'
++'<button class="btn secondary small" onclick="updateSoloPrompt('+n+')">Preview The Prompt</button>'
++'<div class="prompt-out" id="s'+n+'_prompt">Fill the form, then tap Preview The Prompt.</div>'
++'</div></div>'; } $('soloTabs').innerHTML=tabs; $('soloPanels').innerHTML=panels; var tb=document.querySelectorAll('#soloTabs button'); for(var i=0;i<tb.length;i++){ tb[i].addEventListener('click',function(){ showSolo(parseInt(this.getAttribute('data-solo'),10)); }); } }
+function showSolo(n){ currentSolo=n; var tb=document.querySelectorAll('#soloTabs button'); for(var i=0;i<tb.length;i++){ tb[i].classList.toggle('active',parseInt(tb[i].getAttribute('data-solo'),10)===n); } var ps=document.querySelectorAll('.solo-panel'); for(var j=0;j<ps.length;j++){ ps[j].classList.toggle('active',ps[j].id==='solo-panel-'+n); } }
+function soloData(n){ var charId=$('s'+n+'_char').value; if(charId==='__new') charId=''; var c=getChar(charId); return {id:'r'+Date.now()+n,type:'Solo - '+AGENT_NAMES[n],agentNum:n,charId:charId,voice:c?(c.voice||''):'',mode:$('s'+n+'_mode').value,pp:SOLO_PP[n]?checkedVal('s'+n+'_pp'):'',ptype:checkedVal('s'+n+'_ptype'),aspect:checkedVal('s'+n+'_aspect'),topic:$('s'+n+'_topic').value.trim(),length:$('s'+n+'_length').value.trim(),script:$('s'+n+'_script').value.trim(),productName:$('s'+n+'_product_name').value.trim(),productLink:$('s'+n+'_product_link').value.trim(),refVideo:$('s'+n+'_ref_video').value.trim(),notes:$('s'+n+'_notes').value.trim(),extra:$('s'+n+'_extra').value.trim(),status:'queued',createdAt:Date.now()}; }
+function updateSoloPrompt(n){ var out=$('s'+n+'_prompt'); if(out) out.textContent=buildSoloPrompt(soloData(n)); }
+function queueSolo(n){ var item=soloData(n); queue.unshift(item); save(); renderQueue(); refreshPickers(); showPage('queue'); }
+function setStatus(id,status){ for(var i=0;i<queue.length;i++){ if(queue[i].id===id) queue[i].status=status; } save(); renderQueue(); if(currentRunId===id) renderRunCard(id); }
+function deleteRun(id){ if(!confirm('Delete this job from the Queue?')) return; queue=queue.filter(function(q){ return q.id!==id; }); if(currentRunId===id) currentRunId=null; save(); renderQueue(); refreshPickers(); }
+function renderQueue(){ var w=$('queueList'); $('queueBadge').textContent=queue.length; if(!queue.length){ w.innerHTML='<div class="card"><div class="empty">Your Queue is empty.<br>Add a full production from the Production Intake Form, or a solo job from the Solo Agent Forms.</div></div>'; return; } w.innerHTML=queue.map(function(q){ var c=getChar(q.charId); return '<div class="card"><h3>'+esc(q.type)+'</h3>'
++'<p class="kv"><b>Character:</b> '+esc(charLabel(c))+'</p>'
++'<p class="kv"><b>Mode:</b> '+esc(q.mode||'None picked')+'</p>'
++(q.pp?'<p class="kv"><b>Product Presentation:</b> '+esc(ppLabel(q.pp))+'<br><b>Prompt sentence:</b> '+esc(ppSentence(q.pp))+'</p>':'')
++(q.ptype?'<p class="kv"><b>Production Type:</b> '+esc(q.ptype)+'</p>':'')
++(q.aspect?'<p class="kv"><b>Aspect ratio:</b> '+esc(q.aspect)+'</p>':'')
++'<p class="kv"><b>Topic:</b> '+esc(q.topic||'-')+'</p>'
++(q.length?'<p class="kv"><b>Length:</b> '+esc(q.length)+'</p>':'')
++(q.productName?'<p class="kv"><b>Product:</b> '+esc(q.productName)+(q.productLink?' - <a href="'+esc(q.productLink)+'" target="_blank" rel="noopener">link</a>':'')+'</p>':'')
++'<p class="kv"><b>Status:</b> <span class="status">'+esc(q.status)+'</span></p>'
++'<div class="status-btns"><button class="'+(q.status==='queued'?'on':'')+'" onclick="setStatus(\''+q.id+'\',\'queued\')">Queued</button><button class="'+(q.status==='working'?'on':'')+'" onclick="setStatus(\''+q.id+'\',\'working\')">Working</button><button class="'+(q.status==='done'?'on':'')+'" onclick="setStatus(\''+q.id+'\',\'done\')">Done</button></div>'
++'<div class="btn-row"><button class="btn" onclick="runInChat(\''+q.id+'\')">Run in Chat</button><button class="btn secondary" onclick="deleteRun(\''+q.id+'\')">Delete</button></div></div>'; }).join(''); }
+function runInChat(id){ setStatus(id,'working'); currentRunId=id; renderRunCard(id); showPage('run'); }
+function renderRunCard(id){ var q=null; for(var i=0;i<queue.length;i++){ if(queue[i].id===id) q=queue[i]; } var w=$('runCard'); if(!q){ w.innerHTML='<div class="empty">That job is no longer in your Queue.</div>'; return; } var c=getChar(q.charId); var prompt=promptFor(q); w.innerHTML='<div class="mini"><h4>'+esc(q.type)+'</h4>'
++'<p class="kv"><b>Character:</b> '+esc(charLabel(c))+(c?(isLocked(c)?' - LOCKED':' - NOT LOCKED yet'):'')+'</p>'
++(c?'<div class="slotbox"><b>Slot 1 - Headshot</b><div class="slotframe">'+(c.slot1?'<img src="'+c.slot1.data+'" alt="Headshot">':'Missing')+'</div></div><div class="slotbox"><b>Slot 2 - Body reference sheet</b><div class="slotframe">'+(c.slot2?'<img src="'+c.slot2.data+'" alt="Body reference sheet">':'Missing')+'</div></div>':'')
++'<p class="kv"><b>Voice:</b> '+esc(q.voice||(c?c.voice:'')||'No voice description')+'</p>'
++'<p class="kv"><b>Mode:</b> '+esc(q.mode||'None picked')+'</p>'
++(q.pp?'<p class="kv"><b>Product Presentation:</b> '+esc(ppLabel(q.pp))+'<br><b>Prompt sentence:</b> '+esc(ppSentence(q.pp))+'</p>':'')
++(q.ptype?'<p class="kv"><b>Production Type:</b> '+esc(q.ptype)+'</p>':'')
++(q.aspect?'<p class="kv"><b>Aspect ratio:</b> '+esc(q.aspect)+'</p>':'')
++'<p class="kv"><b>Topic:</b> '+esc(q.topic||'-')+'</p>'
++(q.length?'<p class="kv"><b>Length:</b> '+esc(q.length)+'</p>':'')
++(q.script?'<p class="kv"><b>Script:</b> '+esc(q.script.slice(0,300))+(q.script.length>300?'...':'')+'</p>':'')
++(q.productName?'<p class="kv"><b>Product:</b> '+esc(q.productName)+(q.productLink?' - <a href="'+esc(q.productLink)+'" target="_blank" rel="noopener">link</a>':'')+'</p>':'')
++(q.refVideo?'<p class="kv"><b>Reference video:</b> <a href="'+esc(q.refVideo)+'" target="_blank" rel="noopener">'+esc(q.refVideo)+'</a></p>':'')
++'<p class="kv"><b>Status:</b> <span class="status">'+esc(q.status)+'</span></p></div>'
++'<div class="prompt-out">'+esc(prompt)+'</div>'
++'<button class="btn" onclick="copyText(promptFor(getQueueItem(\''+q.id+'\')),this)">COPY PROMPT - paste it in chat</button>'; }
+function getQueueItem(id){ for(var i=0;i<queue.length;i++){ if(queue[i].id===id) return queue[i]; } return null; }
+function copyText(text,btn){ function done(){ if(btn){ var old=btn.textContent; btn.textContent='Copied - paste it in chat'; setTimeout(function(){ btn.textContent=old; },2200); } } function fallback(){ var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); done(); } if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done).catch(function(){ fallback(); }); } else { fallback(); } }
+</script>
+
+<script>
+function jobHeader(title,d){ var c=getChar(d.charId); return title+'\nRun this exact job. Do not swap any details.\n\n'
++'Character: '+charLabel(c)+(c?(isLocked(c)?' (LOCKED - Slot 1 headshot and Slot 2 body sheet are the reference images)':' (NOT LOCKED YET - both Vault slots must be filled before scenes are made)'):'')+'\n'
++'Voice: '+(d.voice||(c?c.voice:'')||'Not specified')+'\n'
++'Mode: '+(d.mode||'None picked')+'\n'
++(d.pp?'Product Presentation: '+ppLabel(d.pp)+'\nPrompt sentence: '+ppSentence(d.pp)+'\n':'')
++(d.ptype?'Production Type: '+d.ptype+'\n':'')
++(d.aspect?'Aspect ratio: '+d.aspect+'\n':'')
++'Topic: '+(d.topic||'-')+'\n'
++(d.length?'Length: '+d.length+'\n':'')
++(d.script?'Script / lines / brief:\n'+d.script+'\n':'')
++(d.productName?'Product: '+d.productName+(d.productLink?' ('+d.productLink+')':'')+'\n':'')
++(d.refVideo?'Reference video: '+d.refVideo+'\n':'')
++(d.extra?'Extra for this agent: '+d.extra+'\n':'')
++(d.notes?'Notes: '+d.notes+'\n':'')
++'\n'; }
+function rulesBlock(pp){ return 'CREW WORKFLOW - run in this order:\n'
++'1. SCOUT finds the look on Pinterest in guest view (an Amazon-linked product when there is one) - or, for a shop video, the listing\u2019s real product photo. Copy the picture.\n'
++'2. SCRIPT locks the words. Nothing is shot from an unlocked script, and no line is ever invented after the lock.\n'
++'3. CASTING locks the character from the Vault: the Slot 1 headshot and Slot 2 body sheet are the reference images on every scene that character appears in - heard or seen.\n'
++'4. STORYBOARD breaks the locked script into numbered shots: action only, one speaker per shot, timing measured from the real audio or line lengths, every scene labeled with the run\u2019s one Product Presentation choice.\n'
++'5. IMAGE makes and locks each shot\u2019s still in chat from the references. For an outfit: put the locked character in the exact outfit in chat first, check face and outfit match, then make the one single 9:16 outfit reference sheet as PNG.\n'
++'6. CAMERA animates the approved stills - Reference One is her headshot (Slot 1), Reference Two is the outfit reference sheet or the shot\u2019s approved scene still. NEVER leave Reference Two empty. No character bible is needed - the reference photos ARE the lock. Do not paste descriptions of her into scene prompts.\n'
++'7. VOICE replaces or confirms the audio: generated audio is discarded unless explicitly intended and verified line by line; the final carries the approved voices only, one at a time.\n'
++'8. SOUND lays the real music bed and ambient tone under everything, at an even level.\n'
++'9. EDITOR stitches with the concat filter and a full re-encode to phone-safe yuv420p, tightens pauses, and adds captions from the actual spoken audio.\n'
++'10. COLOR grades the whole video as one piece.\n'
++'11. QC DIRECTOR audits the finished video end to end (hands and limbs, exact products, flow, audio word for word, phone-safe format). Failures go back to the agent who owns that step, get fixed, and get re-checked.\n'
++'12. CAPTION AND POSTING prepares the caption, title, hashtags, and - for a shop video - the disclosure switches, and returns the finished video IN CHAT for my approval. Never post, publish, or share it.\n\n'
++'THE SCENE PROMPT SHAPE - use this for every scene, and nothing else about her:\n'
++'"Use the reference images and keep the character perfectly consistent. [Scene action only.] [Spoken line, if any.] '+(pp&&pp!=='None'?ppSentence(pp):'')+'"\n'
++(pp==='None'?'This is a None run: scene prompts carry NO presentation sentence at all.\n':'')
++'NEVER describe her in a scene prompt - no face, hair, skin, body, or outfit description. Describing her overrides the references and creates a different person.\n\n'
++'PRODUCT PRESENTATION - either/or, never both: wearing and holding never happen in the same shot. If a video needs both, use separate scenes - holding first, wearing later.\n\n'
++'THE DIRECTOR\u2019S RULES - standing, they bind every agent:\n'
++'- All generation stays in my included tools. No paid external provider, credit purchase, or API spend without my explicit approval of the exact cost.\n'
++'- Every image my AI creates is PNG, never webp. My own uploaded Vault photos stay as I saved them (JPG or PNG).\n'
++'- Text-locked work stays locked: greeting words and any lettering in a still are copied untouched into every frame - never let a video model re-draw words.\n'
++'- Nothing is posted automatically, ever. Posting always needs my separate approval.\n'
++'- No price, discount, sold counts, or sale claim in any video or caption, ever. Captions end on the benefit plus tap the link.\n'
++'- TikTok Shop videos carry the disclosure set: Disclose post content ON, Branded content checked, AI-generated label ON.\n'
++'- Voice and copy everywhere: personable, human, plain words. No em dashes - use hyphens instead.'; }
+function buildFullPrompt(d){ return jobHeader('FILM CREW AGENT FARM - FULL PRODUCTION RUN (all 12 agents, in crew order)',d)
++'Run the whole crew in order for this production: Scout, Script, Casting, Storyboard, Image, Camera, Voice, Sound, Editor, Color, QC Director, Caption and Posting. The script locks before any shot is planned. Casting uses the Vault reference photos on every scene - Reference Two is never empty. One speaker per shot. The QC Director audits the finished video before it is handed to me, and failures go back to the owning agent, get fixed, and get re-checked. Bring the finished video back in chat for my approval. Never post it.\n\n'
++rulesBlock(d.pp); }
+function buildSoloPrompt(d){ var b=''; var n=d.agentNum;
+if(n===1) b='AGENT JOB - Scout only:\nFind the look for this production. Search Pinterest in guest view (no sign-in) for the outfit, set, and mood for the mode and topic above, especially products with an Amazon link. For a shop video, anchor on the listing\u2019s REAL product photo instead. Report: the pick, what its picture shows, why it fits, and the link exactly as shown. Do not check price or availability at this step - and never put a price in a video or caption later.\n\n';
+if(n===2) b='AGENT JOB - Script Agent only:\nWrite the words for this production: the hook, every spoken line, and all on-screen text, spelled exactly. Write from the real teaching points for a podcast or lesson, in the hosts\u2019 own voices. When you hand it back, the script is LOCKED: mark it locked, and no line may be invented or changed after this point in any later stage.\n\n';
+if(n===3) b='AGENT JOB - Casting Agent only:\nLock who is in this video from my Character Vault. For each character, confirm Slot 1 headshot and Slot 2 body reference sheet are filled, and state that those two photos are the reference images for every scene that character appears in - including characters who are only heard or named. Never lock a character from a description alone. Named canon characters keep their established looks - never redesign or recast anyone.\n\n';
+if(n===4) b='AGENT JOB - Storyboard Agent only:\nTurn the locked script above into numbered shots: scene action, camera framing, and timing measured from the real audio or the real line lengths - never guessed durations. One speaker per shot; no two characters ever talk over each other. Label every scene with the Product Presentation choice above and use the scene prompt shape below. Write scene ACTION only - never a description of the character.\n\n';
+if(n===5) b='AGENT JOB - Image Agent only:\nCreate the stills for this production in chat: character references, the outfit photo (my locked character wearing the exact outfit from the Scout pick, checked for face and outfit match), the one single 9:16 outfit reference sheet as PNG, and each shot\u2019s approved starting still. All ultra realistic, real skin and hair texture, all PNG. Scene stills follow the aspect ratio above; character references stay 9:16.\n\n';
+if(n===6) b='AGENT JOB - Camera Agent only:\nMake the moving shots in chat with my AI video tool, starting every shot from its approved still and, where the story allows, from the previous shot\u2019s last frame. Consistent Character lock on every scene: Reference One = headshot (Slot 1), Reference Two = the outfit reference sheet or the approved scene still. NEVER leave Reference Two empty. Natural performance only: normal blinking, real gestures, nobody staring into the camera. Return the shots in chat for approval. Never post.\n\n';
+if(n===7) b='AGENT JOB - Voice Agent only:\nOwn all spoken sound for this production. Generated video audio is discarded unless it was explicitly intended AND verified line by line against the locked script - the final always uses the approved voice or master audio. Only the current speaker appears to speak, and voices never overlap. If reliable lip-sync is not available, say so plainly and build it as a narrated visual edit with captions instead.\n\n';
+if(n===8) b='AGENT JOB - Sound Agent only:\nGive this production real sound: an original or properly licensed music bed at the right level under the voices, plus soft ambient room tone where the scene needs it. Never silence, never a bare tone or pad pretending to be music. Shop videos use commercial-use compliant music only. Check the whole track end to end for even loudness and no clipping.\n\n';
+if(n===9) b='AGENT JOB - Editor Agent only:\nStitch the approved shots into the finished video in the aspect ratio above: concat filter with a full re-encode (never a stream copy across mixed sources), phone-safe yuv420p, fast start. Compress dead air - no pause longer than about a third of a second inside a scene. Add captions built from the actual spoken audio, readable on a phone, never covering faces. Verify the final with a full linear play-through before handing it back.\n\n';
+if(n===10) b='AGENT JOB - Color Agent only:\nApply ONE consistent grade across every shot of this production: matched light, matched skin tones, the same look from the first frame to the last. Use clean light dissolves where a hard cut jars. Plus-size women are never slimmed down and skin tones are never lightened - the grade serves the footage, it does not change the people.\n\n';
+if(n===11) b='AGENT JOB - QC Director only:\nRun the director-level audit on this finished video before it is handed to me. (1) HANDS AND LIMBS: sweep frames from every scene - never more than 2 hands and never more than 2 arms on a person, no extra or malformed fingers or limbs. (2) EXACT PRODUCTS: check renders against the listing\u2019s real product photo - look-alikes fail. (3) FLOW: smooth pacing, consistent light and color. (4) AUDIO: full end-to-end listen, word for word against the locked script, no overlapping voices, no silent holes, even loudness, real music present. (5) FORMAT: the final file plays on a phone - yuv420p verified. Report pass or fail per check; anything that fails goes back to the owning agent, gets fixed, and gets re-checked. Never hand me a video that fails.\n\n';
+if(n===12) b='AGENT JOB - Caption and Posting Agent only:\nWrite the caption, the on-screen hook, the title, and the hashtags for wherever this video is headed, and prepare the posting packet. No price, no sold counts, no discount or sale claim - ever. End on the benefit plus tap the link. For a TikTok Shop video, include the disclosure set in the packet: Disclose post content ON, Branded content checked, AI-generated label ON. Prepare everything - post nothing. Posting needs my separate approval.\n\n';
+return jobHeader('FILM CREW AGENT FARM - SOLO AGENT JOB',d)+b+rulesBlock(d.pp); }
+function promptFor(item){ return item.agentNum ? buildSoloPrompt(item) : buildFullPrompt(item); }
+buildSoloUI(); refreshPickers(); renderVault(); renderQueue();
+</script>
+</body>
+</html>
